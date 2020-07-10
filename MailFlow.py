@@ -105,7 +105,6 @@ class ComposeViewController(Category('ComposeViewController')):
                     blockquote.parentNode().insertBefore__(
                         document.createElement_('BR'), blockquote)
 
-        view.insertParagraphSeparator_(None)
         view.undoManager().removeAllActions()
         self.setHasUserMadeChanges_(False)
         self.backEnd().setHasChanges_(False)
@@ -124,7 +123,10 @@ class ComposeViewController(Category('ComposeViewController')):
                 view.setSelectedDOMRange_affinity_(range, 0)
                 view.moveUp_(None)
             else:
-                view.moveToEndOfDocument_(None)
+                view.moveToBeginningOfDocument_(None)
+                view.insertParagraphSeparator_(None)
+                view.insertParagraphSeparator_(None)
+                view.moveToBeginningOfDocument_(None)
         return result
 
 
