@@ -252,8 +252,8 @@ class MessageViewController(Category('MessageViewController')):
     def forward_(self, old, *args):
         event = NSApplication.sharedApplication().currentEvent()
         if event and event.modifierFlags() & NSAlternateKeyMask:
-            return old(self, *args)
-        return self._messageViewer().forwardAsAttachment_(*args)
+            return self._messageViewer().forwardAsAttachment_(*args)
+        return old(self, *args)
 
 
 class MessageViewer(Category('MessageViewer')):
@@ -261,8 +261,8 @@ class MessageViewer(Category('MessageViewer')):
     def forwardMessage_(self, old, *args):
         event = NSApplication.sharedApplication().currentEvent()
         if event and event.modifierFlags() & NSAlternateKeyMask:
-            return old(self, *args)
-        return self.forwardAsAttachment_(*args)
+            return self.forwardAsAttachment_(*args)
+        return old(self, *args)
 
 
 class SingleMessageViewer(Category('SingleMessageViewer')):
@@ -270,8 +270,8 @@ class SingleMessageViewer(Category('SingleMessageViewer')):
     def forwardMessage_(self, old, *args):
         event = NSApplication.sharedApplication().currentEvent()
         if event and event.modifierFlags() & NSAlternateKeyMask:
-            return old(self, *args)
-        return self.forwardAsAttachment_(*args)
+            return self.forwardAsAttachment_(*args)
+        return old(self, *args)
 
 
 class MailFlow(Class('MVMailBundle')):
