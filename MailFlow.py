@@ -110,7 +110,8 @@ class ComposeViewController(Category('ComposeViewController')):
                     blockquote.parentNode().insertBefore__(
                         document.createElement_('BR'), blockquote)
 
-        view.insertParagraphSeparator_(None)
+        if self._bottomPosting:
+            view.insertParagraphSeparator_(None)
         view.undoManager().removeAllActions()
         self.setHasUserMadeChanges_(False)
         self.backEnd().setHasChanges_(False)
@@ -129,7 +130,13 @@ class ComposeViewController(Category('ComposeViewController')):
                 view.setSelectedDOMRange_affinity_(domrange, 0)
                 view.moveUp_(None)
             else:
-                view.moveToEndOfDocument_(None)
+                if self._bottomPosting:
+                    view.moveToEndOfDocument_(None)
+                else:
+                    view.moveToBeginningOfDocument_(None)
+                    view.insertParagraphSeparator_(None)
+                    view.insertParagraphSeparator_(None)
+                    view.moveToBeginningOfDocument_(None)
         return result
 
 
@@ -294,6 +301,7 @@ class MailFlow(Class('MVMailBundle')):
 
         defaults = NSUserDefaults.standardUserDefaults()
         defaults = defaults.dictionaryForKey_('MailFlow') or {}
+        ComposeViewController._bottomPosting = defaults.get('BottomPosting', True)
         ComposeViewController._fixAttribution = defaults.get('FixAttribution', True)
         MCMessageGenerator._flowWidth = int(defaults.get('FlowWidth', 76))
 

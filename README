@@ -200,6 +200,12 @@ Configuration
 MailFlow reads two preferences from the com.apple.mail domain. These can be
 set at the command line with the macOS defaults command:
 
+  defaults write com.apple.mail MailFlow -dict-add BottomPosting -bool false
+  defaults write com.apple.mail MailFlow -dict-add BottomPosting -bool true
+    - configure MailFlow to use bottom-posting (reply follows the quoted
+      original message). The default is on. Set to false to use top-posting
+      (reply precedes the quoted original message).
+
   defaults write com.apple.mail MailFlow -dict-add FixAttribution -bool false
   defaults write com.apple.mail MailFlow -dict-add FixAttribution -bool true
     - configure MailFlow to strip the verbose date and time information
