@@ -216,6 +216,12 @@ set at the command line with the macOS defaults command:
       default is 76. Set to 0 to disable format=flowed but still restrict
       unnecessary use of quoted-printable.
 
+  defaults write com.apple.mail MailFlow -dict-add ForwardAsMime -bool false
+  defaults write com.apple.mail MailFlow -dict-add ForwardAsMime -bool true
+    - configure MailFlow to forward messages as MIME attachments by default
+      and inline if the Option key is held down. The default is on. Set to
+      false to swap the two behaviors, forwarding inline by default.
+
 
 pbmbox
 ------
