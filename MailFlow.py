@@ -262,28 +262,40 @@ class MCMimePart(Category('MCMimePart')):
 class MessageViewController(Category('MessageViewController')):
     @swizzle('MessageViewController', b'forward:')
     def forward_(self, old, *args):
+        standard = lambda: self._messageViewer().forwardAsAttachment_(*args)
+        alternative = lambda: old(self, *args)
+        if not self._forwardAsMime:
+            standard, alternative = alternative, standard
         event = NSApplication.sharedApplication().currentEvent()
         if event and event.modifierFlags() & NSAlternateKeyMask:
-            return old(self, *args)
-        return self._messageViewer().forwardAsAttachment_(*args)
+            return alternative()
+        return standard()
 
 
 class MessageViewer(Category('MessageViewer')):
     @swizzle('MessageViewer', b'forwardMessage:')
     def forwardMessage_(self, old, *args):
+        standard = lambda: self.forwardAsAttachment_(*args)
+        alternative = lambda: old(self, *args)
+        if not self._forwardAsMime:
+            standard, alternative = alternative, standard
         event = NSApplication.sharedApplication().currentEvent()
         if event and event.modifierFlags() & NSAlternateKeyMask:
-            return old(self, *args)
-        return self.forwardAsAttachment_(*args)
+            return alternative()
+        return standard()
 
 
 class SingleMessageViewer(Category('SingleMessageViewer')):
     @swizzle('SingleMessageViewer', b'forwardMessage:')
     def forwardMessage_(self, old, *args):
+        standard = lambda: self._messageViewer().forwardAsAttachment_(*args)
+        alternative = lambda: old(self, *args)
+        if not self._forwardAsMime:
+            standard, alternative = alternative, standard
         event = NSApplication.sharedApplication().currentEvent()
         if event and event.modifierFlags() & NSAlternateKeyMask:
-            return old(self, *args)
-        return self.forwardAsAttachment_(*args)
+            return alternative()
+        return standard()
 
 
 class MailFlow(Class('MVMailBundle')):
@@ -296,6 +308,10 @@ class MailFlow(Class('MVMailBundle')):
         defaults = defaults.dictionaryForKey_('MailFlow') or {}
         ComposeViewController._fixAttribution = defaults.get('FixAttribution', True)
         MCMessageGenerator._flowWidth = int(defaults.get('FlowWidth', 76))
+        forwardAsMime = defaults.get('ForwardAsMime', True)
+        MessageViewController._forwardAsMime = forwardAsMime
+        MessageViewer._forwardAsMime = forwardAsMime
+        SingleMessageViewer._forwardAsMime = forwardAsMime
 
         version = bundle.objectForInfoDictionaryKey_('CFBundleVersion')
         NSLog('Loaded MailFlow %s' % version)
